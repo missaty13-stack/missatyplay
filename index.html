@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MissatyPlay</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+
+    button, input {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 8px 0;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      font-size: 17px;
+    }
+
+    button {
+      background: #7c3aed;
+      color: white;
+      font-weight: bold;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .timer {
+      font-size: 45px;
+      margin: 25px 0;
+      font-weight: bold;
+    }
+
+    .music {
+      margin-top: 25px;
+      padding: 15px;
+      background: #222;
+      border-radius: 15px;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    #status {
+      color: #bbb;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <h1>🎵 MissatyPlay</h1>
+
+    <div class="subtitle">
+      Seu player de música
+    </div>
+
+    <input type="file" id="musicFile" accept="audio/*">
+
+    <div class="music">
+      <div id="musicName">Nenhuma música selecionada</div>
+      <audio id="player" controls></audio>
+    </div>
+
+    <h2>⏱️ Temporizador</h2>
+
+    <div class="timer" id="timer">
+      00:00
+    </div>
+
+    <button onclick="setTimer(15)">15 minutos</button>
+    <button onclick="setTimer(30)">30 minutos</button>
+    <button onclick="setTimer(60)">60 minutos</button>
+
+    <button onclick="stopTimer()">
+      Parar temporizador
+    </button>
+
+    <div id="status">
+      Temporizador desligado
+    </div>
+
+  </div>
+
+<script>
+
+let tempo = 0;
+let intervalo = null;
+
+const player = document.getElementById("player");
+const musicFile = document.getElementById("musicFile");
+const musicName = document.getElementById("musicName");
+
+musicFile.addEventListener("change", function() {
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  player.src = URL.createObjectURL(file);
+  musicName.textContent = file.name;
+
+});
+
+function setTimer(minutos) {
+
+  clearInterval(intervalo);
+
+  tempo = minutos * 60;
+
+  atualizarTela();
+
+  document.getElementById("status").textContent =
+    "Temporizador ativado";
+
+  intervalo = setInterval(function() {
+
+    tempo--;
+
+    atualizarTela();
+
+    if (tempo <= 0) {
+
+      clearInterval(intervalo);
+
+      player.pause();
+
+      document.getElementById("status").textContent =
+        "Tempo encerrado. Música parada.";
+
+    }
+
+  }, 1000);
+}
+
+function stopTimer() {
+
+  clearInterval(intervalo);
+
+  tempo = 0;
+
+  atualizarTela();
+
+  document.getElementById("status").textContent =
+    "Temporizador desligado";
+
+}
+
+function atualizarTela() {
+
+  const minutos = Math.floor(tempo / 60);
+  const segundos = tempo % 60;
+
+  document.getElementById("timer").textContent =
+    String(minutos).padStart(2, "0") +
+    ":" +
+    String(segundos).padStart(2, "0");
+}
+
+</script>
+
+</body>
+</html>
