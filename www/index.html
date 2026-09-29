@@ -1,192 +1,447 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MissatyPlay</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Misat Music Play</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
-      text-align: center;
-    }
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#080b12;
+ color:#fff;
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+}
+.app{
+ max-width:600px;
+ margin:auto;
+ padding:22px 16px 110px;
+}
+header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:22px;
+}
+.logo{
+ width:48px;height:48px;border-radius:15px;
+ background:linear-gradient(135deg,#ff4f8b,#7b5cff);
+ display:flex;align-items:center;justify-content:center;
+ font-size:24px;font-weight:bold;
+}
+h1{font-size:22px;margin:0 0 4px 12px;flex:1}
+.sub{color:#8d96a8;font-size:12px}
 
-    .app {
-      max-width: 500px;
-      margin: auto;
-      padding: 30px 20px;
-    }
+.card{
+ background:linear-gradient(145deg,#151b27,#0e131d);
+ border:1px solid #293243;
+ border-radius:22px;
+ padding:20px;
+ margin-bottom:16px;
+ box-shadow:0 12px 30px #0005;
+}
+.cover{
+ width:210px;height:210px;
+ margin:5px auto 18px;
+ border-radius:25px;
+ background:linear-gradient(135deg,#ff4f8b,#4c54ff);
+ display:flex;align-items:center;justify-content:center;
+ font-size:70px;
+ box-shadow:0 15px 40px #0008;
+}
+.song{text-align:center;font-size:20px;font-weight:bold}
+.artist{text-align:center;color:#8d96a8;margin-top:6px}
 
-    h1 {
-      font-size: 38px;
-      margin-bottom: 10px;
-    }
+.progress{
+ width:100%;margin:18px 0 4px;
+}
+.times{
+ display:flex;justify-content:space-between;
+ color:#8993a6;font-size:12px;
+}
+.controls{
+ display:flex;align-items:center;justify-content:center;
+ gap:18px;margin-top:15px;
+}
+button{
+ border:0;
+ color:white;
+ background:#202838;
+ border-radius:15px;
+ padding:13px 17px;
+ font-size:15px;
+}
+button:active{transform:scale(.96)}
+.play{
+ width:64px;height:64px;border-radius:50%;
+ background:linear-gradient(135deg,#ff4f8b,#765cff);
+ font-size:25px;
+}
+.actions{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+.action{
+ text-align:center;
+ padding:15px 5px;
+ border:1px solid #293243;
+ border-radius:16px;
+ background:#111722;
+}
+.action span{display:block;font-size:22px;margin-bottom:6px}
+.action small{color:#a0a8b7}
 
-    .subtitle {
-      color: #aaa;
-      margin-bottom: 30px;
-    }
+input[type=file]{display:none}
 
-    button, input {
-      width: 100%;
-      box-sizing: border-box;
-      margin: 8px 0;
-      padding: 15px;
-      border-radius: 12px;
-      border: none;
-      font-size: 17px;
-    }
+.playlist{
+ max-height:260px;
+ overflow:auto;
+}
+.track{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ padding:13px 8px;
+ border-bottom:1px solid #222a38;
+}
+.track:last-child{border:0}
+.track button{margin-left:auto;padding:8px 11px}
+.track-name{
+ overflow:hidden;
+ white-space:nowrap;
+ text-overflow:ellipsis;
+}
+.eq{
+ display:flex;
+ align-items:flex-end;
+ justify-content:center;
+ gap:7px;height:90px;
+ margin:10px 0;
+}
+.bar{
+ width:10px;
+ border-radius:8px;
+ background:linear-gradient(#ff4f8b,#735cff);
+ animation:bounce .7s infinite alternate;
+}
+.bar:nth-child(2){height:55%;animation-delay:.1s}
+.bar:nth-child(3){height:80%;animation-delay:.2s}
+.bar:nth-child(4){height:40%;animation-delay:.3s}
+.bar:nth-child(5){height:70%;animation-delay:.15s}
+.bar:nth-child(6){height:50%;animation-delay:.25s}
+.bar:nth-child(7){height:85%;animation-delay:.35s}
+@keyframes bounce{to{transform:scaleY(.45)}}
 
-    button {
-      background: #7c3aed;
-      color: white;
-      font-weight: bold;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .timer {
-      font-size: 45px;
-      margin: 25px 0;
-      font-weight: bold;
-    }
-
-    .music {
-      margin-top: 25px;
-      padding: 15px;
-      background: #222;
-      border-radius: 15px;
-    }
-
-    audio {
-      width: 100%;
-      margin-top: 15px;
-    }
-
-    #status {
-      color: #bbb;
-      margin-top: 15px;
-    }
-  </style>
+.timer{
+ display:flex;gap:10px;align-items:center;
+}
+.timer input{
+ width:90px;
+ padding:12px;
+ border:1px solid #344055;
+ border-radius:12px;
+ background:#0b1019;
+ color:white;
+}
+footer{
+ position:fixed;
+ bottom:0;left:0;right:0;
+ background:#0c1018ee;
+ backdrop-filter:blur(15px);
+ border-top:1px solid #273042;
+ padding:12px 16px;
+ text-align:center;
+ color:#737d90;font-size:11px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <h1>🎵 MissatyPlay</h1>
+<header>
+<div class="logo">M</div>
+<h1>Misat Music Play<div class="sub">Seu player de músicas</div></h1>
+<button onclick="document.getElementById('files').click()">＋</button>
+</header>
 
-    <div class="subtitle">
-      Seu player de música
-    </div>
+<div class="card">
 
-    <input type="file" id="musicFile" accept="audio/*">
+<div class="cover">♫</div>
 
-    <div class="music">
-      <div id="musicName">Nenhuma música selecionada</div>
-      <audio id="player" controls></audio>
-    </div>
+<div class="song" id="songName">Nenhuma música</div>
+<div class="artist" id="artist">Escolha suas músicas</div>
 
-    <h2>⏱️ Temporizador</h2>
+<audio id="audio" preload="metadata"></audio>
 
-    <div class="timer" id="timer">
-      00:00
-    </div>
+<input id="progress" class="progress" type="range" min="0" max="100" value="0">
 
-    <button onclick="setTimer(15)">15 minutos</button>
-    <button onclick="setTimer(30)">30 minutos</button>
-    <button onclick="setTimer(60)">60 minutos</button>
+<div class="times">
+<span id="current">0:00</span>
+<span id="duration">0:00</span>
+</div>
 
-    <button onclick="stopTimer()">
-      Parar temporizador
-    </button>
+<div class="controls">
+<button onclick="previous()">⏮</button>
+<button class="play" onclick="togglePlay()" id="play">▶</button>
+<button onclick="next()">⏭</button>
+</div>
 
-    <div id="status">
-      Temporizador desligado
-    </div>
+</div>
 
-  </div>
+<div class="card">
+<div class="actions">
+
+<label class="action">
+<span>📁</span>
+<small>Adicionar músicas</small>
+<input id="files" type="file" accept="audio/*" multiple>
+</label>
+
+<button class="action" onclick="showTimer()">
+<span>⏱️</span>
+<small>Temporizador</small>
+</button>
+
+<button class="action" onclick="showEqualizer()">
+<span>🎚️</span>
+<small>Equalizador</small>
+</button>
+
+</div>
+</div>
+
+<div class="card" id="eqCard" style="display:none">
+<h3>🎚️ Equalizador</h3>
+<p style="color:#8993a6;font-size:13px">
+Controle rápido de áudio
+</p>
+<div class="eq">
+<div class="bar" style="height:45%"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+</div>
+
+<div class="card" id="timerCard" style="display:none">
+<h3>⏱️ Temporizador</h3>
+<div class="timer">
+<input id="minutes" type="number" min="1" placeholder="Minutos">
+<button onclick="startTimer()">Iniciar</button>
+<button onclick="stopTimer()">Parar</button>
+</div>
+<p id="timerText" style="color:#8993a6"></p>
+</div>
+
+<div class="card">
+<h3>🎵 Minhas músicas</h3>
+<div class="playlist" id="playlist">
+<div style="color:#8993a6;padding:15px 5px">
+Adicione suas músicas para começar.
+</div>
+</div>
+</div>
+
+</div>
+
+<footer>Misat Music Play • Reprodução contínua</footer>
 
 <script>
+const audio=document.getElementById("audio");
+const files=document.getElementById("files");
+const playlist=document.getElementById("playlist");
+const songName=document.getElementById("songName");
+const artist=document.getElementById("artist");
+const progress=document.getElementById("progress");
+const current=document.getElementById("current");
+const duration=document.getElementById("duration");
+const play=document.getElementById("play");
 
-let tempo = 0;
-let intervalo = null;
+let songs=[];
+let index=0;
+let timer=null;
 
-const player = document.getElementById("player");
-const musicFile = document.getElementById("musicFile");
-const musicName = document.getElementById("musicName");
-
-musicFile.addEventListener("change", function() {
-
-  const file = this.files[0];
-
-  if (!file) return;
-
-  player.src = URL.createObjectURL(file);
-  musicName.textContent = file.name;
-
+files.addEventListener("change",e=>{
+ songs=[...e.target.files].map(file=>({
+   file,
+   url:URL.createObjectURL(file)
+ }));
+ index=0;
+ renderPlaylist();
+ if(songs.length) loadSong(0);
 });
 
-function setTimer(minutos) {
-
-  clearInterval(intervalo);
-
-  tempo = minutos * 60;
-
-  atualizarTela();
-
-  document.getElementById("status").textContent =
-    "Temporizador ativado";
-
-  intervalo = setInterval(function() {
-
-    tempo--;
-
-    atualizarTela();
-
-    if (tempo <= 0) {
-
-      clearInterval(intervalo);
-
-      player.pause();
-
-      document.getElementById("status").textContent =
-        "Tempo encerrado. Música parada.";
-
-    }
-
-  }, 1000);
+function renderPlaylist(){
+ playlist.innerHTML="";
+ songs.forEach((s,i)=>{
+   const row=document.createElement("div");
+   row.className="track";
+   row.innerHTML=`
+   <span>🎵</span>
+   <div class="track-name">${escapeHtml(s.file.name)}</div>
+   <button onclick="loadSong(${i});playSong()">▶</button>`;
+   playlist.appendChild(row);
+ });
 }
 
-function stopTimer() {
-
-  clearInterval(intervalo);
-
-  tempo = 0;
-
-  atualizarTela();
-
-  document.getElementById("status").textContent =
-    "Temporizador desligado";
-
+function escapeHtml(text){
+ return text.replace(/[&<>"']/g,m=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#039;"
+ }[m]));
 }
 
-function atualizarTela() {
+function loadSong(i){
+ if(!songs.length)return;
+ index=(i+songs.length)%songs.length;
+ const s=songs[index];
 
-  const minutos = Math.floor(tempo / 60);
-  const segundos = tempo % 60;
+ audio.src=s.url;
+ songName.textContent=s.file.name.replace(/\.[^/.]+$/,"");
+ artist.textContent="Misat Music Play";
+ progress.value=0;
 
-  document.getElementById("timer").textContent =
-    String(minutos).padStart(2, "0") +
-    ":" +
-    String(segundos).padStart(2, "0");
+ audio.load();
+
+ if("mediaSession" in navigator){
+   navigator.mediaSession.metadata=new MediaMetadata({
+     title:songName.textContent,
+     artist:"Misat Music Play"
+   });
+ }
 }
 
+function playSong(){
+ audio.play();
+ play.textContent="⏸";
+}
+
+function togglePlay(){
+ if(!songs.length){
+   document.getElementById("files").click();
+   return;
+ }
+ if(audio.paused)playSong();
+ else{
+   audio.pause();
+   play.textContent="▶";
+ }
+}
+
+function next(){
+ if(!songs.length)return;
+ index=(index+1)%songs.length;
+ loadSong(index);
+ playSong();
+}
+
+function previous(){
+ if(!songs.length)return;
+ index=(index-1+songs.length)%songs.length;
+ loadSong(index);
+ playSong();
+}
+
+/* Reprodução contínua */
+audio.addEventListener("ended",()=>{
+ next();
+});
+
+audio.addEventListener("play",()=>{
+ play.textContent="⏸";
+});
+
+audio.addEventListener("pause",()=>{
+ play.textContent="▶";
+});
+
+audio.addEventListener("loadedmetadata",()=>{
+ duration.textContent=format(audio.duration);
+});
+
+audio.addEventListener("timeupdate",()=>{
+ if(audio.duration){
+   progress.value=(audio.currentTime/audio.duration)*100;
+ }
+ current.textContent=format(audio.currentTime);
+});
+
+progress.addEventListener("input",()=>{
+ if(audio.duration){
+   audio.currentTime=(progress.value/100)*audio.duration;
+ }
+});
+
+function format(sec){
+ if(!isFinite(sec))return"0:00";
+ let m=Math.floor(sec/60);
+ let s=Math.floor(sec%60).toString().padStart(2,"0");
+ return `${m}:${s}`;
+}
+
+function showTimer(){
+ document.getElementById("timerCard").style.display="block";
+ document.getElementById("eqCard").style.display="none";
+}
+
+function showEqualizer(){
+ document.getElementById("eqCard").style.display="block";
+ document.getElementById("timerCard").style.display="none";
+}
+
+function startTimer(){
+ stopTimer();
+
+ const mins=parseInt(document.getElementById("minutes").value);
+ if(!mins||mins<1){
+   document.getElementById("timerText").textContent="Digite os minutos.";
+   return;
+ }
+
+ let seconds=mins*60;
+
+ timer=setInterval(()=>{
+   seconds--;
+
+   let m=Math.floor(seconds/60);
+   let s=String(seconds%60).padStart(2,"0");
+
+   document.getElementById("timerText").textContent=
+   `Parando em ${m}:${s}`;
+
+   if(seconds<=0){
+     stopTimer();
+     audio.pause();
+     play.textContent="▶";
+     document.getElementById("timerText").textContent=
+     "⏹ Reprodução parada.";
+   }
+ },1000);
+}
+
+function stopTimer(){
+ if(timer){
+   clearInterval(timer);
+   timer=null;
+ }
+ document.getElementById("timerText").textContent="Temporizador parado.";
+}
+
+/* Controles da tela bloqueada quando suportados pelo Android/WebView */
+if("mediaSession" in navigator){
+ navigator.mediaSession.setActionHandler("play",()=>audio.play());
+ navigator.mediaSession.setActionHandler("pause",()=>audio.pause());
+ navigator.mediaSession.setActionHandler("nexttrack",()=>next());
+ navigator.mediaSession.setActionHandler("previoustrack",()=>previous());
+}
 </script>
 
 </body>
