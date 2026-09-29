@@ -1,17 +1,16 @@
 name: Gerar APK MissatyPlay
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar projeto
+      - name: Baixar código
         uses: actions/checkout@v4
 
       - name: Configurar Node.js
@@ -25,26 +24,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Instalar Capacitor
-        run: |
-          npm init -y
-          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
-
-      - name: Criar configuração
-        run: |
-          cat > capacitor.config.json <<'EOF'
-          {
-            "appId": "com.missatyplay.app",
-            "appName": "MissatyPlay",
-            "webDir": ".",
-            "bundledWebRuntime": false
-          }
-          EOF
+      - name: Instalar dependências
+        run: npm install
 
       - name: Criar projeto Android
         run: |
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
           npx cap add android
-          npx cap copy android
+          npx cap sync android
 
       - name: Gerar APK
         run: |
